@@ -1,0 +1,124 @@
+.addContainer__background{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    background-color: var(--gray);
+    opacity: 48%;
+}
+
+.addContainer__content{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    background-color: var(--white);
+    width: 50%;
+    height: 50%;
+    z-index: 2000;
+    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.62);
+    border-radius: 10px;
+}
+
+.content__flex{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 20px;
+    padding: 20px;
+}
+
+.content__flex-title{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.content__flex-title>input{
+    border: 0;
+    color: black;
+    font-size: xx-large;
+}
+
+.content__flex-title>input::placeholder{
+    color: black;
+    font-size: xx-large;
+    text-transform: none;
+}
+
+.content__flex-contents{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.contents__description{
+    width: 60%;
+}
+
+.contents__state{
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    height: 100%;
+}
+
+.state{
+    background-color: var(--grayLight);
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.23);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.state__date{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 20px;
+}
+
+.date__title{
+    font-size: small;
+}
+
+.date__content-start, .date__content-end{
+    font-size: small;
+    font-weight: 400;
+}
+
+
+.content__flex-date{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.rangeDate__title{
+    font-size: medium;
+    font-weight: 100;
+}
+
+.content__flex-button{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+:where(.css-dev-only-do-not-override-14i19y2).ant-picker-dropdown{
+    z-index: 3000 !important;
+}

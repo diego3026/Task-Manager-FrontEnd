@@ -5,6 +5,8 @@ import Button from '@mui/material/Button';
 import { FaTrashAlt } from "react-icons/fa";
 import './Tasks.css'
 import { useNavigate } from 'react-router-dom';
+import AddTask from '../AddTask/AddTask';
+import { useState } from 'react';
 
 const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 80 },
@@ -30,20 +32,24 @@ const paginationModel = { page: 0, pageSize: 5 };
 
 const Tasks = () => {
     const navigate = useNavigate();
-
+    const [isAddTask, setIsAddTask] = useState(false);
+ 
     const handleRemove = () => {
-        navigate("/prueba");
     }
 
     const handleAdd = () => {
-        navigate("/prueba");
+        setIsAddTask(true);
+    }
+
+    const onCloseAddTask = () => {
+        setIsAddTask(false);
     }
 
     return (
         <div className="tasks">
             <div className="task__buttons">
                 <div>
-                    <Button onClick={handleRemove} variant="contained" style={{backgroundColor:'#ff1915', color:"var(--black)",textTransform:"capitalize", display:'flex',gap:10}}>
+                    <Button disabled onClick={handleRemove} variant="contained" style={{backgroundColor:'#ff1915', color:"var(--black)",textTransform:"capitalize", display:'flex',gap:10}}>
                         <FaTrashAlt style={{fontSize: 'larger'}}/>
                         Eliminar tarea
                     </Button>
@@ -67,9 +73,9 @@ const Tasks = () => {
                     />
                 </Paper>
             </div>
-            <div className='culo'>
-
-            </div>
+            {isAddTask && (
+                <AddTask onClose={onCloseAddTask}/> 
+            )}
         </div>
     )
 }
