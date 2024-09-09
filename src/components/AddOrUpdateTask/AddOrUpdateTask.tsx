@@ -1,15 +1,27 @@
-import './AddTask.css'
+import './AddOrUpdateTask.css'
 import { FaCheck } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
-import { useState } from 'react';
 import { Button, TextField } from '@mui/material';
 import { DatePicker, Space } from 'antd';
+import { useState } from 'react';
 
 const { RangePicker } = DatePicker;
 
-const AddTask = ({ onClose }:any) => {
+const AddOrUpdateTask = ({data, onClose }:any) => {
+    const [taskName, setTaskName] = useState(data?.name || '');
+    const [taskDescription, setTaskDescription] = useState(data?.description || '');
+
     const handleAdd = () => {
     }
+
+    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setTaskName(event.target.value);
+    }
+
+    const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setTaskDescription(event.target.value);
+    }
+
 
     return (
         <div className="addContainer">
@@ -17,7 +29,7 @@ const AddTask = ({ onClose }:any) => {
             <div className="addContainer__content">
                 <div className="content__flex">
                     <div className="content__flex-title">
-                        <input placeholder='Nombre de la tarea' type="text" />
+                        <input placeholder='Nombre de la tarea' type="text" onChange={handleNameChange} value={taskName}/>
                         <IoClose style={{ fontSize: 'x-large' }} onClick={onClose} />
                     </div>
                     <div className="content__flex-contents">
@@ -28,6 +40,8 @@ const AddTask = ({ onClose }:any) => {
                                 multiline
                                 sx={{ width: '100%', background: 'var(--grayLight)' }}
                                 rows={4}
+                                value={taskDescription}
+                                onChange={handleDescriptionChange}
                                 placeholder='Agregar descripción'
                             />
                         </div>
@@ -64,4 +78,4 @@ const AddTask = ({ onClose }:any) => {
     )
 }
 
-export default AddTask;
+export default AddOrUpdateTask;
