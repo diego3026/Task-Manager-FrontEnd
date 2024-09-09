@@ -1,0 +1,25 @@
+.navbar__principal{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    background-color: var(--white);
+    height: 10%;
+}
+
+.search{
+    width: 30%;
+}
+
+.user{
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: center;
+}
+
+.user__username{
+    font-size: medium;
+    color: var(--black);
+}

@@ -1,0 +1,23 @@
+.footer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: var(--grayDark);
+    padding: 15px 0;
+    margin-top: 40px;   
+}
+
+.footer__nombres{
+    display: flex; 
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.footer__nombres>h3{
+    font-size: small;
+    color: var(--blueGray);
+    border-bottom: 1px solid;
+}

@@ -1,0 +1,35 @@
+.hero{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.hero__texto{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.titulo-primero{
+    font-size: xxx-large;   
+}
+
+.titulo-segundo{
+    color: var(--blueGray);
+    font-size: xxx-large;
+}
+
+.titulo-tercero{
+    color: var(--gray);
+    font-size: smaller;
+}
+
+.hero__imagen{
+    display: flex;
+}
+
+.hero__imagen-img{
+    object-fit: contain;
+    width: 500px;
+}
