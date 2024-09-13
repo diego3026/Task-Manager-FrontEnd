@@ -7,26 +7,27 @@ import './Tasks.css'
 import AddOrUpdateTask from '../AddOrUpdateTask/AddOrUpdateTask';
 import { useEffect, useState } from 'react';
 import { RxUpdate } from "react-icons/rx";
-import { getAllTasks } from '../../apiService/apiService'
+import { getAllTasks, deleteTask } from '../../apiService/apiService'
+import Progress from '../Progress/Progress';
 
 const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 80 },
     { field: 'name', headerName: 'Nombre', width: 140 },
-    { field: 'fechaDeInicio', headerName: 'Fecha de inicio', type: 'date', width: 180 },
-    { field: 'fechaDeFin', headerName: 'Fecha de fin', type: 'date', width: 180 },
+    { field: 'start_date', headerName: 'Fecha de inicio', type: 'string', width: 180 },
+    { field: 'end_date', headerName: 'Fecha de fin', type: 'string', width: 180 },
     { field: 'description', headerName: 'Descripcion', type: 'string', width: 400 },
 ];
 
 // const rows = [
-//     { id: 1, name: 'Snow', description: 'Jon', age: 35 },
-//     { id: 2, name: 'Lannister', description: 'Cersei', age: 42 },
-//     { id: 3, name: 'Lannister', description: 'Jaime', age: 45 },
-//     { id: 4, name: 'Stark', description: 'Arya', age: 16 },
-//     { id: 5, name: 'Targaryen', description: 'Daenerys', age: null },
-//     { id: 6, name: 'Melisandre', description: null, age: 150 },
-//     { id: 7, name: 'Clifford', description: 'Ferrara', age: 44 },
-//     { id: 8, name: 'Frances', description: 'Rossini', age: 36 },
-//     { id: 9, name: 'Roxie', description: 'Harvey', age: 65 },
+//     { id: 1, name: 'Jon Snow', start_date: '01/01/2023', end_date: '01/02/2023', description: 'Warden of the North' },
+//     { id: 2, name: 'Cersei Lannister', start_date: '15/02/2023', end_date: '15/03/2023', description: 'Queen Regent' },
+//     { id: 3, name: 'Jaime Lannister', start_date: '01/03/2023', end_date: '01/04/2023', description: 'Kingslayer' },
+//     { id: 4, name: 'Arya Stark', start_date: '10/04/2023', end_date: '10/05/2023', description: 'Faceless Assassin' },
+//     { id: 5, name: 'Daenerys Targaryen', start_date: '20/05/2023', end_date: '20/06/2023', description: 'Mother of Dragons' },
+//     { id: 6, name: 'Melisandre', start_date: '01/06/2023', end_date: '01/07/2023', description: 'Red Priestess' },
+//     { id: 7, name: 'Clifford', start_date: '10/07/2023', end_date: '10/08/2023', description: 'Lord of the Vale' },
+//     { id: 8, name: 'Frances Rossini', start_date: '15/08/2023', end_date: '15/09/2023', description: 'Archer' },
+//     { id: 9, name: 'Roxie Harvey', start_date: '01/09/2023', end_date: '01/10/2023', description: 'Scholar' },
 // ];
 
 const paginationModel = { page: 0, pageSize: 5 };
@@ -37,11 +38,16 @@ const Tasks = () => {
     const [amountRowSelected, setAmountRowSelected] = useState(0);
     const [rowSelected, setRowSelected] = useState<any[]>([]);
     const [rows, setRows] = useState<any[]>([]);
+    const [isProgress, setIsProgress] = useState(false);
 
     async function fetchData() {
       try {
         const result = await getAllTasks();
-        setRows(result);
+        setIsProgress(true);
+        if (result){
+            setRows(result.content);
+            setIsProgress(false);
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -51,7 +57,22 @@ const Tasks = () => {
         fetchData();
     }, []);
 
+    async function fetchDeleteData(id:any) {
+        try {
+            const result = await deleteTask(id);
+            setIsProgress(true);
+            if (result){
+                setIsProgress(false);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
     const handleRemove = () => {
+        const data = rowSelected[0];
+        fetchDeleteData(data.id);
+        fetchData();
     }
 
     const handleAdd = () => {
@@ -64,10 +85,12 @@ const Tasks = () => {
 
     const onCloseAddTask = () => {
         setIsAddTask(false);
+        fetchData();
     }
 
     const onCloseUpdateTask = () => {
         setIsUpdateTask(false);
+        fetchData();
     }
 
     const onRowsSelectionHandler = (ids: any[] | GridRowSelectionModel) => {
@@ -120,11 +143,12 @@ const Tasks = () => {
                 </Paper>
             </div>
             {isAddTask && (
-                <AddOrUpdateTask onClose={onCloseAddTask}/> 
+                <AddOrUpdateTask update={false} onClose={onCloseAddTask}/> 
             )}
             {isUpdateTask && (
-                <AddOrUpdateTask data={rowSelected[0]} onClose={onCloseUpdateTask}/> 
+                <AddOrUpdateTask update={true} data={rowSelected[0]} onClose={onCloseUpdateTask}/> 
             )}
+            {isProgress && <Progress/>}
         </div>
     )
 }
