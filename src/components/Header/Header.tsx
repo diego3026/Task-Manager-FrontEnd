@@ -7,8 +7,12 @@ import { useNavigate } from 'react-router-dom';
 const Header = () => {
     const navigate = useNavigate()
 
-    const handlePrincipal = () =>{
-        navigate("/principal")
+    const handleLogin= () =>{
+        navigate("/Login")
+    }
+
+    const handleRegister= () =>{
+        navigate("/Registro")
     }
 
     return (
@@ -18,8 +22,8 @@ const Header = () => {
                 <h1 className="logo__text-color young-serif-regular">Task</h1>
             </div>
             <div className="buttons">
-                <Button onClick={handlePrincipal} variant="text" style={{color:"#232360",textTransform:"capitalize"}}>Registrarse</Button>
-                <Button onClick={handlePrincipal} variant="contained" style={{backgroundColor:"#232360",textTransform:"capitalize"}}>Ingresar</Button>
+                <Button onClick={handleRegister} variant="text" style={{color:"#232360",textTransform:"capitalize"}}>Registrarse</Button>
+                <Button onClick={handleLogin} variant="contained" style={{backgroundColor:"#232360",textTransform:"capitalize"}}>Ingresar</Button>
             </div>
         </div>
     )
