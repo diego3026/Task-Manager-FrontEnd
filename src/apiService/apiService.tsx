@@ -34,6 +34,34 @@ export const postTask = async (data: any) => {
     }
 };
 
+export const register = async (data: any) => {
+    try {
+        const response = await apiService.post('/login', data);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+export const login = async (data: any) => {
+    try {
+        const response = await apiService.post('/register', data);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const refreshTokenApi = async (data: any) => {
+    try {
+        const response = await apiService.post('/token/refresh', data);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const updateTask = async (id: any, data: any) => {
     try {
         const response = await apiService.put(`/tasks/${id}`, data);

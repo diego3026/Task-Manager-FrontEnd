@@ -12,7 +12,7 @@ function RouterProv() {
       <Route path="/" element={<Home/>}/>
       <Route path="/principal" element={<Principal/>}/>
       <Route path="/Login" element={<Login/>}/>
-      <Route path="/Registro" element={<Register/>}/>
+      <Route path="/registro" element={<Register/>}/>
     </Routes>
   )
 }

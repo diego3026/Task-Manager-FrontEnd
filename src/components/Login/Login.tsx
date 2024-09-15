@@ -1,35 +1,35 @@
-import React, { useState } from 'react';
 import './Login.css';
 import { FaUser } from 'react-icons/fa';
 import { IoIosLock } from 'react-icons/io'; // Corrección aquí
+import { useNavigate } from 'react-router-dom';
 
 
 const Login = () => {
-  const [action, setAction] = useState('');
+  const navigate = useNavigate();
 
-  const registerLink = () => {
-    setAction('active');
+  const handleLogin = () => {
+    navigate("/principal");
   };
 
   return (
     <div className='background__login'>
-      <div className={`wrapper ${action}`}>
-        <div className={`form-box login ${action === 'login' ? 'active' : ''}`}>
-          <form action=''>
+      <div className={`wrapper`}>
+        <div className={`form-box login`}>
+          <div className='form'>
             <h1>Login</h1>
             <div className='input-box'>
               <input type='text' placeholder='Usuario' required />
               <FaUser className='icono' />
             </div>
             <div className='input-box'>
-              <input type='password' placeholder='Contraseña' required /> 
+              <input type='password' placeholder='Contraseña' required />
               <IoIosLock className='icono' />
             </div>
-            <button type="submit">Ingresar</button>
+            <button onClick={handleLogin}>Ingresar</button>
             <div className="login-link">
-              <p> ¿No tienes una cuenta? <a href='/Registro' className='HiperVinculoRegistro' onClick={registerLink}> Registro </a></p>
+              <p> ¿No tienes una cuenta? <a href='/registro' className='HiperVinculoRegistro'> Registro </a></p>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>

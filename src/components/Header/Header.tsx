@@ -12,7 +12,7 @@ const Header = () => {
     }
 
     const handleRegister= () =>{
-        navigate("/Registro")
+        navigate("/registro")
     }
 
     return (

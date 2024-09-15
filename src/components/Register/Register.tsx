@@ -5,17 +5,16 @@ import { IoIosLock } from 'react-icons/io';
 
 
 const Register = () => {
-  const [action, setAction] = useState('');
 
-  const loginLink = () => {
-    setAction('active');
-  };
+  const handleRegister = () => {
+
+  }
 
   return (
     <div className='background__register'>
-     <div className={`wrapper ${action}`}>
-      <div className={`form-box registro ${action === 'registro' ? 'active' : ''}`}>
-        <form action=''>
+     <div className={`wrapper`}>
+      <div className={`form-box registro`}>
+        <div className='form'>
           <h1>Registro</h1>
           <div className='input-box'>
             <input type='text' placeholder='Usuario' required />
@@ -29,11 +28,11 @@ const Register = () => {
             <input type='password' placeholder='Contraseña' required /> {/* Corrección aquí */}
             <IoIosLock className='icono' />
           </div>
-          <button type="submit">Registrarse</button>
+          <button onClick={handleRegister}>Registrarse</button>
           <div className="register-link">
-            <p> ¿Tienes una cuenta? <a href='/login' className='HiperVinculo' onClick={loginLink}> Login </a></p> {/* Corrección aquí */}
+            <p> ¿Tienes una cuenta? <a href='/login' className='HiperVinculo'> Login </a></p> {/* Corrección aquí */}
           </div>
-        </form>
+        </div>
       </div>
       </div>
     </div>
