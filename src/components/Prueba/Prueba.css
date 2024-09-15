@@ -1,0 +1,106 @@
+.TEXTO{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 75%;
+}
+
+
+
+.MASGRANDE {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f4f4f9; /* Fondo claro para contraste */
+}
+
+.BIGCOMPONENT {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 75vh;
+    width: 90%;
+    gap: 50px;
+    border: 1px solid rgb(155, 33, 255);
+    border-radius: 15px; /* Bordes redondeados */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra para darle profundidad */
+    background-color: white; /* Fondo blanco para destacar el contenido */
+    padding: 20px; /* Espacio interno */
+}
+
+.TEXTO h3 {
+    font-size: 24px; /* Aumentar tamaño del texto */
+    font-weight: bold;
+    color: rgb(85, 85, 255); /* Color llamativo */
+    margin-bottom: 10px;
+}
+
+.DESCRIPCIONcuadro {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 80%;
+    gap: 20px;
+}
+
+.Descripcion {
+    flex: 1;
+    height: auto;
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px; /* Bordes redondeados para el textarea */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
+
+.Fechas {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9; /* Fondo ligero para separar visualmente */
+}
+
+.INICIO, .FINAL {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.INICIO h3, .FINAL h3 {
+    font-size: 18px;
+    font-weight: normal;
+    color: #333; /* Texto más suave */
+}
+
+.GUARDAR {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.GUARDAR Button {
+    background-color: rgb(85, 85, 255); /* Color del botón */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Sombra para el botón */
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.GUARDAR Button:hover {
+    background-color: rgb(65, 65, 255); /* Cambio de color al hacer hover */
+}
