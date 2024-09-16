@@ -1,6 +1,9 @@
 import { login, register, refreshTokenApi } from '../apiService/apiService';
 import React, { createContext, useContext, useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import "../components/Alert/AlertSucess"
+import AlertSucess from '../components/Alert/AlertSucess';
+import AlertError from '../components/Alert/AlertError';
 
 interface AuthContextProps {
     isAuthenticated: boolean;
@@ -63,10 +66,12 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                 localStorage.setItem("user", JSON.stringify(response.user))
                 localStorage.setItem("token", response.access);
                 localStorage.setItem("refresh", response.refresh);
+                AlertSucess("Iniciaste sesion exitosamente");
                 navigate("/principal");
             }
         } catch (err) {
             console.error(err);
+            AlertError("Algo ha salido mal");
         }
     };
 
@@ -88,11 +93,12 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                 localStorage.setItem("user", JSON.stringify(response.user))
                 localStorage.setItem("token", response.access);
                 localStorage.setItem("refresh", response.refresh);
-                // AlertExito({ message: 'Registro Exitoso' });
+                AlertSucess('Registro Exitoso');
                 navigate("/principal");
             }
         } catch (err) {
             console.error(err);
+            AlertError("Algo ha salido mal");
         }
     };
 

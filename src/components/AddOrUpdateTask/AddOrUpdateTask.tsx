@@ -8,8 +8,8 @@ import { postTask, updateTask } from '../../apiService/apiService'
 import { RangePickerProps } from 'antd/es/date-picker';
 import dayjs, { Dayjs } from 'dayjs';
 import Progress from '../Progress/Progress';
-import AlertSucess from '../Alert/AlertSucess/AlertSucess';
-import AlertError from '../Alert/AlertError/AlertError';
+import AlertSucess from '../Alert/AlertSucess';
+import AlertError from '../Alert/AlertError';
 
 const { RangePicker } = DatePicker;
 
@@ -22,8 +22,6 @@ const AddOrUpdateTask = ({ update, data, onClose }: any) => {
     const [dateStart, setDateStart] = useState(data?.start_date ? data.start_date : "dd/mm/yyyy");
     const [dateEnd, setDateEnd] = useState(data?.end_date ? data.end_date : "dd/mm/yyyy");
     const [isProgress, setIsProgress] = useState(false);
-    const [isAlertSucess, setIsAlertSucess] = useState(false);
-    const [isAlertError, setIsAlertError] = useState(false);
 
     const handleDateChange: RangePickerProps['onChange'] = (dates, dateStrings) => {
         setDates(dates as [Dayjs, Dayjs] | null);
@@ -37,17 +35,13 @@ const AddOrUpdateTask = ({ update, data, onClose }: any) => {
             const result = await updateTask(id,data);
             if (result){
                 setIsProgress(false);
-                setIsAlertSucess(true);
+                AlertSucess("Se ha actualizado exitosamente");
             }
         } catch (error) {
             console.error('Error fetching data:', error);
             setIsProgress(false);
-            setIsAlertError(true);
+            AlertError("Algo ha salido mal");
         }
-        setTimeout(()=>{
-            setIsAlertSucess(false);
-            setIsAlertError(false);
-        },2000);
     }
 
     async function fetchPostData(data:any) {
@@ -56,17 +50,13 @@ const AddOrUpdateTask = ({ update, data, onClose }: any) => {
             const result = await postTask(data);
             if (result){
                 setIsProgress(false);
-                setIsAlertSucess(true);
+                AlertSucess("Se ha creado exitosamente");
             }
         } catch (error) {
             console.error('Error fetching data:', error);
             setIsProgress(false);
-            setIsAlertError(true);
+            AlertError("Algo ha salido mal");
         }
-        setTimeout(()=>{
-            setIsAlertSucess(false);
-            setIsAlertError(false);
-        },2000);
     }
     
     const handleSave = () => {
@@ -150,8 +140,6 @@ const AddOrUpdateTask = ({ update, data, onClose }: any) => {
                 </div>
             </div>
             {isProgress && <Progress/>}
-            {isAlertSucess && <AlertSucess/>}
-            {isAlertError && <AlertError/>}
         </div>
     )
 }
