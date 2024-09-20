@@ -37,3 +37,11 @@
   width: 100vw;
   height: 100vh;
 }
+
+.swal2-container{
+  z-index: 4000;
+}
+
+.css-10nakn3-MuiModal-root-MuiPopover-root-MuiMenu-root{
+  z-index: 6000 !important;
+}

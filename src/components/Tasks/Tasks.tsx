@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { RxUpdate } from "react-icons/rx";
 import { getAllTasks, deleteTask } from '../../apiService/apiService'
 import Progress from '../Progress/Progress';
+import { useAuth } from '../../contexts/AuthProvider';
 
 const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 80 },
@@ -16,6 +17,7 @@ const columns: GridColDef[] = [
     { field: 'start_date', headerName: 'Fecha de inicio', type: 'string', width: 180 },
     { field: 'end_date', headerName: 'Fecha de fin', type: 'string', width: 180 },
     { field: 'description', headerName: 'Descripcion', type: 'string', width: 400 },
+    { field: 'status', headerName: 'Estado', type: 'string', width: 400 },
 ];
 
 // const rows = [
@@ -30,8 +32,6 @@ const columns: GridColDef[] = [
 //     { id: 9, name: 'Roxie Harvey', start_date: '01/09/2023', end_date: '01/10/2023', description: 'Scholar' },
 // ];
 
-const paginationModel = { page: 0, pageSize: 5 };
-
 const Tasks = () => {
     const [isAddTask, setIsAddTask] = useState(false);
     const [isUpdateTask, setIsUpdateTask] = useState(false);
@@ -39,14 +39,30 @@ const Tasks = () => {
     const [rowSelected, setRowSelected] = useState<any[]>([]);
     const [rows, setRows] = useState<any[]>([]);
     const [isProgress, setIsProgress] = useState(false);
+    const auth = useAuth();
 
     async function fetchData() {
       try {
-        const result = await getAllTasks();
-        setIsProgress(true);
-        if (result){
-            setRows(result.content);
-            setIsProgress(false);
+        if (auth.token){
+            const result = await getAllTasks(auth.user.id,auth.token);
+            setIsProgress(true);
+            if (result){
+                const resultContent = result.content; 
+
+                const filteredRows = resultContent.map((item: any) => ({
+                    id: item.id,
+                    name: item.name,
+                    description: item.description,
+                    start_date: item.start_date,
+                    end_date: item.end_date,
+                    status: item.status.name
+                }));
+
+                setRows(filteredRows);
+                setIsProgress(false);
+            }
+        }else{
+            console.log("Error bearer token");
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -59,10 +75,12 @@ const Tasks = () => {
 
     async function fetchDeleteData(id:any) {
         try {
-            const result = await deleteTask(id);
-            setIsProgress(true);
-            if (result){
-                setIsProgress(false);
+            if(auth.token){
+                const result = await deleteTask(id,auth.token);
+                setIsProgress(true);
+                if (result){
+                    setIsProgress(false);
+                }
             }
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -134,7 +152,13 @@ const Tasks = () => {
                     <DataGrid
                         rows={rows}
                         columns={columns}
-                        initialState={{ pagination: { paginationModel } }}
+                        initialState={{
+                            pagination: {
+                              paginationModel: {
+                                pageSize: 5,
+                              },
+                            },
+                        }}
                         pageSizeOptions={[10, 20]}
                         checkboxSelection
                         onRowSelectionModelChange={(ids) => onRowsSelectionHandler(ids)}

@@ -7,7 +7,9 @@ export default function AlertSucess(message:string) {
             icon: "success",
             title: message,
             showConfirmButton: false,
-            timer: 1500
+            customClass:{
+                container: "swal__container"
+            }
         })
     );
 }

@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import AlertSucess from '../components/Alert/AlertSucess';
 import AlertError from '../components/Alert/AlertError';
+import { jwtDecode } from 'jwt-decode';
 
 interface AuthContextProps {
     isAuthenticated: boolean;
@@ -29,23 +30,27 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         const storedRefresh = localStorage.getItem("refresh");
         const storedUser = localStorage.getItem("user");
 
-        if (storedToken && storedUser && storedRefresh) {
+        if (storedToken){
             setToken(storedToken);
-            setRefresh(storedRefresh);
+        }
+
+        if(storedUser){
             try {
                 setUser(JSON.parse(storedUser));
                 setIsAuthenticated(true);
             } catch (error) {
                 console.error("Error parsing user from localStorage:", error);
-                clearLocalStorage();
             }
         }
+
+        if (storedRefresh) {
+            setRefresh(storedRefresh);
+        }
+
     }, []);
 
-    const saveToLocalStorage = (token: string, refresh: string, user: any) => {
+    const saveTokenToLocalStorage = (token: string,) => {
         localStorage.setItem("token", token);
-        localStorage.setItem("refresh", refresh);
-        localStorage.setItem("user", JSON.stringify(user));
     };
 
     const clearLocalStorage = () => {
@@ -59,12 +64,22 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
             const response: any = await refreshTokenApi({ refreshToken: refresh });
             setToken(response.token);
             setRefresh(response.refresh);
-            saveToLocalStorage(response.access, response.refresh, { ...user, access: response.access });
+            saveTokenToLocalStorage(response.token);
         } catch (error) {
             console.error("Error refreshing token:", error);
             logoutUser();
         }
     };
+
+    const saveUser = (token:string) => {
+        const user = jwtDecode(token);
+        setUser(user);
+        saveUserToLocalStorage(user);
+    }
+
+    const saveUserToLocalStorage = (user:any) => {
+        localStorage.setItem("user",JSON.stringify(user));
+    }
 
     const loginUser = async (data: any) => {
         try {
@@ -76,8 +91,9 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
             if (response) {
                 setToken(response.token);
                 // setRefresh(response.refresh);
-                // setIsAuthenticated(true);
-                // saveToLocalStorage(response.access, response.refresh, response.user);
+                setIsAuthenticated(true);
+                saveTokenToLocalStorage(response.token);
+                saveUser(response.token)
                 AlertSucess("Iniciaste sesión exitosamente");
                 navigate("/principal");
             }

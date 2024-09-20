@@ -28,7 +28,7 @@ const PrincipalHeader = () => {
                 <TextField sx={{width:"100%"}} id="outlined-search" label="Buscar" type="search" />
             </div>
             <div className="user">
-                <h3 className="user__username">Diego Oñate</h3>
+                <h3 className="user__username">{auth.user.name}</h3>
                 <div className="user__menu">
                     <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
                         <Tooltip title="Account settings">

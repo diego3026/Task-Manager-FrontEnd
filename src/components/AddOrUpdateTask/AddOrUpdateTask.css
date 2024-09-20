@@ -70,6 +70,7 @@
     flex-direction: column;
     width: 40%;
     height: 100%;
+    gap: 10px;
 }
 
 .state{
@@ -116,9 +117,13 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 :where(.css-dev-only-do-not-override-14i19y2).ant-picker-dropdown{
     z-index: 3000 !important;
+}
+
+:where(.css-dev-only-do-not-override-14i19y2).ant-select-dropdown{
+    z-index: 5000 !important;
 }

@@ -8,7 +8,9 @@ export default function AlertError(message:string) {
             title: "Oops...",
             text: message,
             showConfirmButton: false,
-            timer: 1500
+            customClass:{
+                container: "swal__container"
+            }
         })
     );
 }

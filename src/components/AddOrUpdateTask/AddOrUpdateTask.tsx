@@ -1,7 +1,7 @@
 import './AddOrUpdateTask.css'
 import { FaCheck } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
-import { Button, TextField } from '@mui/material';
+import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import { DatePicker, Space } from 'antd';
 import { useState } from 'react';
 import { postTask, updateTask } from '../../apiService/apiService'
@@ -10,6 +10,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import Progress from '../Progress/Progress';
 import AlertSucess from '../Alert/AlertSucess';
 import AlertError from '../Alert/AlertError';
+import { useAuth } from '../../contexts/AuthProvider';
 
 const { RangePicker } = DatePicker;
 
@@ -21,7 +22,13 @@ const AddOrUpdateTask = ({ update, data, onClose }: any) => {
         : null);
     const [dateStart, setDateStart] = useState(data?.start_date ? data.start_date : "dd/mm/yyyy");
     const [dateEnd, setDateEnd] = useState(data?.end_date ? data.end_date : "dd/mm/yyyy");
+    const [status, setStatus] = useState(data?.status ? data?.status : '');
     const [isProgress, setIsProgress] = useState(false);
+    const auth = useAuth();
+
+    const handleChange = (event: SelectChangeEvent) => {
+        setStatus(event.target.value);
+    };
 
     const handleDateChange: RangePickerProps['onChange'] = (dates, dateStrings) => {
         setDates(dates as [Dayjs, Dayjs] | null);
@@ -29,13 +36,17 @@ const AddOrUpdateTask = ({ update, data, onClose }: any) => {
         setDateEnd(dateStrings[1])
     };
 
-    async function fetchUpdateData(id:any,data:any) {
+    async function fetchUpdateData(id: any, data: any) {
         setIsProgress(true);
         try {
-            const result = await updateTask(id,data);
-            if (result){
-                setIsProgress(false);
-                AlertSucess("Se ha actualizado exitosamente");
+            if (auth.token) {
+                const result = await updateTask(id, data, auth.token);
+                if (result) {
+                    setIsProgress(false);
+                    AlertSucess("Se ha actualizado exitosamente");
+                }
+            } else {
+                console.log("Error bearer token");
             }
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -44,13 +55,17 @@ const AddOrUpdateTask = ({ update, data, onClose }: any) => {
         }
     }
 
-    async function fetchPostData(data:any) {
+    async function fetchPostData(data: any) {
         setIsProgress(true);
         try {
-            const result = await postTask(data);
-            if (result){
-                setIsProgress(false);
-                AlertSucess("Se ha creado exitosamente");
+            if (auth.token) {
+                const result = await postTask(data, auth.token);
+                if (result) {
+                    setIsProgress(false);
+                    AlertSucess("Se ha creado exitosamente");
+                }
+            }else {
+                console.log("Error bearer token + ",auth.token);
             }
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -58,15 +73,19 @@ const AddOrUpdateTask = ({ update, data, onClose }: any) => {
             AlertError("Algo ha salido mal");
         }
     }
-    
+
     const handleSave = () => {
         const newData = {
             "name": taskName,
             "description": taskDescription,
             "start_date": dateStart,
-            "end_date": dateEnd
+            "end_date": dateEnd,
+            "status":{
+                "name": status,
+                "description": "Estado creado"
+            }
         }
-        
+
         if (update) {
             fetchUpdateData(data.id, newData)
         } else {
@@ -116,6 +135,28 @@ const AddOrUpdateTask = ({ update, data, onClose }: any) => {
                                     <h3 className='date__content-end'>{dateEnd}</h3>
                                 </div>
                             </div>
+                            <div>
+                                <FormControl sx={{ m: 1, margin:0 }} fullWidth size="small">
+                                    <InputLabel id="demo-select-small-label">Estado</InputLabel>
+                                    <Select
+                                        labelId="demo-select-small-label"
+                                        id="demo-select-small"
+                                        value={status}
+                                        label="Estado"
+                                        onChange={handleChange}
+                                        sx={{
+                                            background:"var(--grayLight)",
+                                        }}
+                                    >
+                                        <MenuItem value="">
+                                            <em>None</em>
+                                        </MenuItem>
+                                        <MenuItem value={"Creada"}>Creada</MenuItem>
+                                        <MenuItem value={"En progreso"}>En progreso</MenuItem>
+                                        <MenuItem value={"Completada"}>Completada</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </div>
                         </div>
                     </div>
                     <div className="content__flex-date">
@@ -139,7 +180,7 @@ const AddOrUpdateTask = ({ update, data, onClose }: any) => {
                     </div>
                 </div>
             </div>
-            {isProgress && <Progress/>}
+            {isProgress && <Progress />}
         </div>
     )
 }
