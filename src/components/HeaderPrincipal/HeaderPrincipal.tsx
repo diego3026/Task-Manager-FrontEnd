@@ -2,7 +2,6 @@ import TextField from "@mui/material/TextField";
 import './HeaderPrincipal.css'
 import { Avatar, Box, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthProvider";
 
 const PrincipalHeader = () => {

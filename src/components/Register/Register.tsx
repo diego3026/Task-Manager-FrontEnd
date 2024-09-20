@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Register.css';
 import { FaUser, FaEnvelope } from 'react-icons/fa';
 import { IoIosLock } from 'react-icons/io';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthProvider';
 import AlertError from '../Alert/AlertError';
 

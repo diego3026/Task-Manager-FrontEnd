@@ -1,7 +1,6 @@
 import './Login.css';
 import { FaUser } from 'react-icons/fa';
 import { IoIosLock } from 'react-icons/io'; // Corrección aquí
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthProvider';
 import { useEffect, useState } from 'react';
 import AlertError from '../Alert/AlertError';
