@@ -1,5 +1,4 @@
 import Swal from 'sweetalert2';
-import './AlertSucess.css';
 
 export default function AlertSucess(message:string) {
 

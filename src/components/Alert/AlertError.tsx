@@ -1,5 +1,4 @@
 import Swal from 'sweetalert2';
-import './AlertError.css';
 
 export default function AlertError(message:string) {
 

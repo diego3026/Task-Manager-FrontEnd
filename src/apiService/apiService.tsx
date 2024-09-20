@@ -36,7 +36,7 @@ export const postTask = async (data: any) => {
 
 export const register = async (data: any) => {
     try {
-        const response = await apiService.post('/login', data);
+        const response = await apiService.post('/auth/register', data);
         return response.data;
     } catch (error) {
         throw error;
@@ -46,7 +46,7 @@ export const register = async (data: any) => {
 
 export const login = async (data: any) => {
     try {
-        const response = await apiService.post('/register', data);
+        const response = await apiService.post('/auth/login', data);
         return response.data;
     } catch (error) {
         throw error;

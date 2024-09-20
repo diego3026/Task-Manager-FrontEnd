@@ -1,121 +1,118 @@
 import { login, register, refreshTokenApi } from '../apiService/apiService';
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import "../components/Alert/AlertSucess"
 import AlertSucess from '../components/Alert/AlertSucess';
 import AlertError from '../components/Alert/AlertError';
 
 interface AuthContextProps {
     isAuthenticated: boolean;
-    token: string,
-    refresh: string,
-    user: any,
-    loginUser: (data: any) => void;
-    registerUser: (data: any) => void;
+    token: string;
+    refresh: string;
+    user: any;
+    loginUser: (data: any) => Promise<void>;
+    registerUser: (data: any) => Promise<void>;
     logoutUser: () => void;
-    refreshToken: () => void;
+    refreshToken: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const tokenValue = localStorage.getItem("token");
-    const [user, setUser] = useState(() => {
-        const storedUser = localStorage.getItem("user");
-        return storedUser ? JSON.parse(storedUser) : null;
-    });
-    const [isAuthenticated, setIsAuthenticated] = useState(tokenValue !== "");
-    const [token, setToken] = useState(localStorage.getItem("token") || "");
-    const [refresh, setRefresh] = useState(localStorage.getItem("refresh") || "");
     const navigate = useNavigate();
-    let userData: any = {};
+    const [token, setToken] = useState<string>("");
+    const [refresh, setRefresh] = useState<string>("");
+    const [user, setUser] = useState<any>(null);
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-    const refreshToken = async () => {
-        try {
-            if (typeof user === 'string') {
-                userData = JSON.parse(user);
-            } else {
-                userData = user;
+    useEffect(() => {
+        const storedToken = localStorage.getItem("token");
+        const storedRefresh = localStorage.getItem("refresh");
+        const storedUser = localStorage.getItem("user");
+
+        if (storedToken && storedUser && storedRefresh) {
+            setToken(storedToken);
+            setRefresh(storedRefresh);
+            try {
+                setUser(JSON.parse(storedUser));
+                setIsAuthenticated(true);
+            } catch (error) {
+                console.error("Error parsing user from localStorage:", error);
+                clearLocalStorage();
             }
-            const response: any = refreshTokenApi({ refreshToken: userData?.refresh });
-            setToken(response.access);
-            setRefresh(response.refresh);
-            localStorage.setItem("token", response.access);
-            localStorage.setItem("refresh", response.refresh);
-            userData.access = response.access;
-            userData.refresh = response.refresh;
-            setUser(userData);
-        } catch (error) {
-            console.error(error);
-            setUser(null);
         }
+    }, []);
+
+    const saveToLocalStorage = (token: string, refresh: string, user: any) => {
+        localStorage.setItem("token", token);
+        localStorage.setItem("refresh", refresh);
+        localStorage.setItem("user", JSON.stringify(user));
     };
 
-
-    const loginUser = (data: any) => {
-        try {
-            const response:any = login({
-                username: data.username,
-                password: data.password
-            });
-            if (response) {
-                setUser(response.user);
-                setToken(response.access);
-                setRefresh(response.refresh)
-                setIsAuthenticated(true)
-                localStorage.setItem("user", JSON.stringify(response.user))
-                localStorage.setItem("token", response.access);
-                localStorage.setItem("refresh", response.refresh);
-                AlertSucess("Iniciaste sesion exitosamente");
-                navigate("/principal");
-            }
-        } catch (err) {
-            console.error(err);
-            AlertError("Algo ha salido mal");
-        }
-    };
-
-    const registerUser = (data: any) => {
-        try {
-            const response:any = register({
-                email: data.email,
-                nombre: data.name,
-                apellido: data.lastName,
-                edad: data.age,
-                username: data.username,
-                password: data.password
-            });
-            if (response) {
-                setUser(response.user);
-                setToken(response.access);
-                setRefresh(response.refresh)
-                setIsAuthenticated(true)
-                localStorage.setItem("user", JSON.stringify(response.user))
-                localStorage.setItem("token", response.access);
-                localStorage.setItem("refresh", response.refresh);
-                AlertSucess('Registro Exitoso');
-                navigate("/principal");
-            }
-        } catch (err) {
-            console.error(err);
-            AlertError("Algo ha salido mal");
-        }
-    };
-
-
-    const removerLocalStorage = () => {
+    const clearLocalStorage = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         localStorage.removeItem("refresh");
-    }
+    };
+
+    const refreshToken = async () => {
+        try {
+            const response: any = await refreshTokenApi({ refreshToken: refresh });
+            setToken(response.token);
+            setRefresh(response.refresh);
+            saveToLocalStorage(response.access, response.refresh, { ...user, access: response.access });
+        } catch (error) {
+            console.error("Error refreshing token:", error);
+            logoutUser();
+        }
+    };
+
+    const loginUser = async (data: any) => {
+        try {
+            const response: any = await login({
+                email: data.email,
+                password: data.password
+            });
+
+            if (response) {
+                setToken(response.token);
+                // setRefresh(response.refresh);
+                // setIsAuthenticated(true);
+                // saveToLocalStorage(response.access, response.refresh, response.user);
+                AlertSucess("Iniciaste sesión exitosamente");
+                navigate("/principal");
+            }
+        } catch (error) {
+            console.error("Error during login:", error);
+            AlertError("Algo ha salido mal");
+        }
+    };
+
+    const registerUser = async (data: any) => {
+        try {
+            const response: any = await register({
+                userName: data.username,
+                email: data.email,
+                password: data.password,
+                role: ["USER"]
+            });
+
+            if (response) {
+                AlertSucess("Registro exitoso");
+                navigate("/login");
+            }
+        } catch (error) {
+            console.error("Error during registration:", error);
+            AlertError("Algo ha salido mal");
+        }
+    };
 
     const logoutUser = () => {
-        setUser(null);
         setToken("");
         setRefresh("");
-        setIsAuthenticated(false)
-        removerLocalStorage();
-        navigate("/inicio-sesion");
+        setUser(null);
+        setIsAuthenticated(false);
+        clearLocalStorage();
+        navigate("/login");
     };
 
     return (

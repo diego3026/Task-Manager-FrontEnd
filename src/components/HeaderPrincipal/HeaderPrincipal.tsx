@@ -3,11 +3,12 @@ import './HeaderPrincipal.css'
 import { Avatar, Box, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthProvider";
 
 const PrincipalHeader = () => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-    const navigate = useNavigate();
+    const auth = useAuth()
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -15,7 +16,7 @@ const PrincipalHeader = () => {
 
     const handleClose = () => {
         setAnchorEl(null);
-        navigate("/");
+        auth.logoutUser();
     };
 
     return (
